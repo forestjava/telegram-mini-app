@@ -10,7 +10,7 @@ export async function fetchResources(): Promise<Resource[]> {
   return response.json();
 }
 
-export async function fetchResource(id: string): Promise<Resource> {
+export async function fetchResource(id: number): Promise<Resource> {
   const response = await fetch(`${API_BASE}/${id}`);
   if (!response.ok) {
     if (response.status === 404) {
@@ -33,7 +33,7 @@ export async function createResource(data: CreateResourceDto): Promise<Resource>
   return response.json();
 }
 
-export async function updateResource(id: string, data: UpdateResourceDto): Promise<Resource> {
+export async function updateResource(id: number, data: UpdateResourceDto): Promise<Resource> {
   const response = await fetch(`${API_BASE}/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -48,7 +48,7 @@ export async function updateResource(id: string, data: UpdateResourceDto): Promi
   return response.json();
 }
 
-export async function deleteResource(id: string): Promise<Resource> {
+export async function deleteResource(id: number): Promise<Resource> {
   const response = await fetch(`${API_BASE}/${id}`, {
     method: 'DELETE',
   });

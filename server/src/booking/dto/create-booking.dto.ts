@@ -1,6 +1,6 @@
-import { IsString } from 'class-validator';
+import { IsInt } from 'class-validator';
 
 export class CreateBookingDto {
-  @IsString()
-  resourceId: string;
+  @IsInt()
+  resourceId: number;
 }

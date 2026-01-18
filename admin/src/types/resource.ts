@@ -1,19 +1,19 @@
 export interface Resource {
-  id: string;
+  id: number;
   title: string;
-  parentId: string | null;
+  parentId: number | null;
   metadata: Record<string, unknown> | null;
   children: Resource[];
 }
 
 export interface CreateResourceDto {
   title: string;
-  parentId?: string;
+  parentId?: number;
   metadata?: Record<string, unknown>;
 }
 
 export interface UpdateResourceDto {
   title?: string;
-  parentId?: string;
+  parentId?: number;
   metadata?: Record<string, unknown>;
 }

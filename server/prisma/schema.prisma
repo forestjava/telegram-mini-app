@@ -7,11 +7,11 @@ generator client {
 }
 
 model Resource {
-  id        String     @id @default(uuid())
+  id        Int        @id @default(autoincrement())
   title     String
 
   // иерархическая структура ресурсов, которые можно бронировать
-  parentId  String?   
+  parentId  Int?   
   parent    Resource?  @relation("ResourceToResource", fields: [parentId], references: [id])
   children  Resource[] @relation("ResourceToResource")
   
@@ -27,7 +27,7 @@ enum AuthProvider {
 }
 
 model User {
-  id          String     @id @default(uuid())
+  id          Int        @id @default(autoincrement())
   type        AuthProvider
   telegramId  Int?          @unique
   keycloakId  String?       @unique
@@ -41,13 +41,13 @@ model User {
 }
 
 model Booking {
-  id         String       @id @default(uuid())
+  id         Int          @id @default(autoincrement())
 
   // бронируемый ресурс
-  resourceId String       @unique
+  resourceId Int          @unique
   resource   Resource     @relation(fields: [resourceId], references: [id])
 
   // владелец брони
-  userId     String          
+  userId     Int          
   user       User         @relation(fields: [userId], references: [id])
 }

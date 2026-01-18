@@ -30,9 +30,10 @@ export class ResourceService {
   /**
    * Рекурсивно строит дерево ресурсов
    */
-  private async buildTreeRecursively(parentId: string | null) {
+  private async buildTreeRecursively(parentId: number | null) {
     const resources = await this.prisma.resource.findMany({
       where: { parentId },
+      orderBy: { id: 'asc' },
     });
 
     return Promise.all(
@@ -46,7 +47,7 @@ export class ResourceService {
   /**
    * Получить ресурс по ID (с дочерними)
    */
-  async findOne(id: string) {
+  async findOne(id: number) {
     const resource = await this.prisma.resource.findUnique({
       where: { id },
       include: {
@@ -69,7 +70,7 @@ export class ResourceService {
   /**
    * Обновить ресурс
    */
-  async update(id: string, updateResourceDto: UpdateResourceDto) {
+  async update(id: number, updateResourceDto: UpdateResourceDto) {
     // Проверяем существование ресурса
     const existing = await this.prisma.resource.findUnique({ where: { id } });
     if (!existing) {
@@ -89,7 +90,7 @@ export class ResourceService {
   /**
    * Удалить ресурс вместе со всеми дочерними
    */
-  async remove(id: string) {
+  async remove(id: number) {
     // Проверяем существование ресурса
     const existing = await this.prisma.resource.findUnique({ where: { id } });
     if (!existing) {
@@ -108,7 +109,7 @@ export class ResourceService {
   /**
    * Рекурсивное удаление дочерних ресурсов
    */
-  private async deleteChildrenRecursively(parentId: string) {
+  private async deleteChildrenRecursively(parentId: number) {
     const children = await this.prisma.resource.findMany({
       where: { parentId },
       select: { id: true },

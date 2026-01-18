@@ -15,7 +15,7 @@ export class BookingService {
    * @param resourceId - ID ресурса для бронирования
    * @param userId - ID пользователя (уже существует в БД после AuthGuard)
    */
-  async createBooking(resourceId: string, userId: string) {
+  async createBooking(resourceId: number, userId: number) {
     // Проверяем существование ресурса
     const resource = await this.prisma.resource.findUnique({
       where: { id: resourceId },
@@ -52,7 +52,7 @@ export class BookingService {
   /**
    * Снять бронь с ресурса
    */
-  async removeBooking(resourceId: string) {
+  async removeBooking(resourceId: number) {
     // Проверяем существование брони
     const booking = await this.prisma.booking.findUnique({
       where: { resourceId },
@@ -84,9 +84,10 @@ export class BookingService {
   /**
    * Рекурсивно строит дерево ресурсов с информацией о бронировании
    */
-  private async buildTreeWithBookings(parentId: string | null) {
+  private async buildTreeWithBookings(parentId: number | null) {
     const resources = await this.prisma.resource.findMany({
       where: { parentId },
+      orderBy: { id: 'asc' },
       include: {
         booking: {
           include: {

@@ -46,9 +46,9 @@ function getUserDisplayName(firstName: string | null, lastName: string | null, u
 interface ResourceItemProps {
   resource: Resource;
   depth: number;
-  onBook: (resourceId: string) => void;
-  onUnbook: (resourceId: string) => void;
-  processingResourceId: string | null;
+  onBook: (resourceId: number) => void;
+  onUnbook: (resourceId: number) => void;
+  processingResourceId: number | null;
   isBookingInProgress: boolean;
   isUnbookingInProgress: boolean;
 }
@@ -211,9 +211,9 @@ export function ResourceTree() {
   const createBooking = useCreateBooking();
   const deleteBooking = useDeleteBooking();
 
-  const [processingResourceId, setProcessingResourceId] = useState<string | null>(null);
+  const [processingResourceId, setProcessingResourceId] = useState<number | null>(null);
 
-  const handleBook = async (resourceId: string) => {
+  const handleBook = async (resourceId: number) => {
     setProcessingResourceId(resourceId);
     try {
       await createBooking.mutateAsync({ resourceId });
@@ -224,7 +224,7 @@ export function ResourceTree() {
     }
   };
 
-  const handleUnbook = async (resourceId: string) => {
+  const handleUnbook = async (resourceId: number) => {
     setProcessingResourceId(resourceId);
     try {
       await deleteBooking.mutateAsync(resourceId);

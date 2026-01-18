@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -27,7 +27,7 @@ export class BookingController {
    */
   @Delete(':resourceId')
   @UseGuards(AuthGuard)
-  remove(@Param('resourceId') resourceId: string) {
+  remove(@Param('resourceId', ParseIntPipe) resourceId: number) {
     return this.bookingService.removeBooking(resourceId);
   }
 

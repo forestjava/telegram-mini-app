@@ -14,7 +14,7 @@ function App() {
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
-  const [parentIdForCreate, setParentIdForCreate] = useState<string | null>(null);
+  const [parentIdForCreate, setParentIdForCreate] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Delete dialog state
@@ -45,7 +45,7 @@ function App() {
     setDialogOpen(true);
   };
 
-  const handleAddChild = (parentId: string) => {
+  const handleAddChild = (parentId: number) => {
     setEditingResource(null);
     setParentIdForCreate(parentId);
     setDialogOpen(true);
@@ -62,7 +62,7 @@ function App() {
     setDeleteDialogOpen(true);
   };
 
-  const handleSubmit = async (data: { title: string; parentId?: string }) => {
+  const handleSubmit = async (data: { title: string; parentId?: number }) => {
     setIsSubmitting(true);
     try {
       if (editingResource) {

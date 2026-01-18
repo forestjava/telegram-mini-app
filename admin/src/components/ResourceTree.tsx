@@ -9,7 +9,7 @@ interface ResourceTreeProps {
   isLoading: boolean;
   onRefresh: () => void;
   onAddRoot: () => void;
-  onAddChild: (parentId: string) => void;
+  onAddChild: (parentId: number) => void;
   onEdit: (resource: Resource) => void;
   onDelete: (resource: Resource) => void;
 }

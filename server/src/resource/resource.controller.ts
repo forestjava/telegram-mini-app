@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ResourceService } from './resource.service';
 import { CreateResourceDto } from './dto/create-resource.dto';
@@ -38,7 +39,7 @@ export class ResourceController {
    * Получить ресурс по ID (с дочерними)
    */
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.resourceService.findOne(id);
   }
 
@@ -48,7 +49,7 @@ export class ResourceController {
    */
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateResourceDto: UpdateResourceDto,
   ) {
     return this.resourceService.update(id, updateResourceDto);
@@ -59,7 +60,7 @@ export class ResourceController {
    * Удалить ресурс вместе с дочерними
    */
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.resourceService.remove(id);
   }
 }

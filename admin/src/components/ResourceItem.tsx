@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 interface ResourceItemProps {
   resource: Resource;
   level: number;
-  onAddChild: (parentId: string) => void;
+  onAddChild: (parentId: number) => void;
   onEdit: (resource: Resource) => void;
   onDelete: (resource: Resource) => void;
 }

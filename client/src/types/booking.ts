@@ -3,7 +3,7 @@
  */
 
 export interface BookingUser {
-  id: string;
+  id: number;
   type: "Telegram" | "Keycloak";
   telegramId: number | null;
   keycloakId: string | null;
@@ -18,30 +18,30 @@ export interface Booking {
 }
 
 export interface Resource {
-  id: string;
+  id: number;
   title: string;
-  parentId: string | null;
+  parentId: number | null;
   metadata: Record<string, unknown> | null;
   children: Resource[];
   booking?: Booking;
 }
 
 export interface CreateBookingDto {
-  resourceId: string;
+  resourceId: number;
 }
 
 export interface BookingResponse {
-  id: string;
-  resourceId: string;
-  userId: string;
+  id: number;
+  resourceId: number;
+  userId: number;
   resource: {
-    id: string;
+    id: number;
     title: string;
-    parentId: string | null;
+    parentId: number | null;
     metadata: Record<string, unknown> | null;
   };
   user: {
-    id: string;
+    id: number;
     type: "Telegram" | "Keycloak";
     telegramId: number | null;
     keycloakId: string | null;

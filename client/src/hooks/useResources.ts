@@ -36,7 +36,7 @@ export function useDeleteBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (resourceId: string) =>
+    mutationFn: (resourceId: number) =>
       api.delete<BookingResponse>(`/api/bookings/${resourceId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RESOURCES_QUERY_KEY });

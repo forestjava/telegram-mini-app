@@ -16,8 +16,8 @@ interface ResourceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   resource: Resource | null; // null for create, Resource for edit
-  parentId: string | null; // for create with parent
-  onSubmit: (data: { title: string; parentId?: string }) => Promise<void>;
+  parentId: number | null; // for create with parent
+  onSubmit: (data: { title: string; parentId?: number }) => Promise<void>;
   isSubmitting: boolean;
 }
 
@@ -43,7 +43,7 @@ export function ResourceDialog({
     e.preventDefault();
     if (!title.trim()) return;
 
-    const data: { title: string; parentId?: string } = { title: title.trim() };
+    const data: { title: string; parentId?: number } = { title: title.trim() };
     if (!isEditing && parentId) {
       data.parentId = parentId;
     }
@@ -62,10 +62,11 @@ export function ResourceDialog({
             </DialogTitle>
             <DialogDescription>
               {isEditing
-                ? 'Измените название ресурса.'
+                ? 'Измените название ресурса. '
                 : parentId
-                  ? 'Создайте дочерний ресурс.'
-                  : 'Создайте новый корневой ресурс.'}
+                  ? 'Создайте дочерний ресурс. '
+                  : 'Создайте новый корневой ресурс. '}
+              Для красоты можно использовать символы дат 📅, ⏰ времени, 🏢 комнат
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
