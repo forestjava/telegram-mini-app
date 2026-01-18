@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
+    expose:
       - 5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -22,7 +22,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-    ports:
+    expose:
       - 3000
     depends_on:
       - database
@@ -32,7 +32,7 @@ services:
   admin:
     build: ./admin
     container_name: telegram-mini-app-admin-${VERSION}
-    ports:
+    expose:
       - 80
     networks:
       - proxy
@@ -40,7 +40,7 @@ services:
   client:
     build: ./client
     container_name: telegram-mini-app-client-${VERSION}
-    ports:
+    expose:
       - 80
     networks:
       - proxy
