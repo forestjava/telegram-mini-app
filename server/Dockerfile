@@ -8,11 +8,6 @@ COPY . .
 RUN npm run prisma:generate
 RUN npm run build
 
-# apply migrations
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
-RUN npm run prisma:deploy
-
-# start the application
+# start the application (migrations run at every startup)
 EXPOSE 3000
-CMD ["npm", "run", "start:prod"]
+CMD ["sh", "-c", "npm run prisma:deploy && npm run start:prod"]
