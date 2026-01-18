@@ -1,16 +1,18 @@
-FROM node:22-alpine AS build
+FROM node:22-alpine
 WORKDIR /app
+
+# build the application
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run prisma:generate
 RUN npm run build
 
-FROM node:22-alpine
-WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package*.json ./
-COPY --from=build /app/prisma ./prisma
+# apply migrations
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+RUN npm run prisma:deploy
+
+# start the application
 EXPOSE 3000
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod"]
+CMD ["npm", "run", "start:prod"]
