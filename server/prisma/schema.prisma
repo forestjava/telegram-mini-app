@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Resource {
+  id        String     @id @default(uuid())
+  title     String
+
+  // иерархическая структура ресурсов, которые можно бронировать
+  parentId  String?   
+  parent    Resource?  @relation("ResourceToResource", fields: [parentId], references: [id])
+  children  Resource[] @relation("ResourceToResource")
+  
+  metadata  Json?
+  
+  // бронирование
+  booking  Booking?
+}
+
+model Booking {
+  id         String       @id @default(uuid())
+
+  // бронируемый ресурс
+  resourceId String       @unique
+  resource   Resource     @relation(fields: [resourceId], references: [id])
+
+  // владелец брони
+  user       String
+}
