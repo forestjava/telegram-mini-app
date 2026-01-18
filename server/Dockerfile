@@ -6,7 +6,7 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run prisma:generate
-RUN npm run build && ls -la dist/
+RUN npm run build
 
 # start the application (migrations run at every startup)
 EXPOSE 3000
