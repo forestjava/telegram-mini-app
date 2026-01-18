@@ -1,10 +1,13 @@
 import { type ReactNode, createContext, useContext, useEffect, useState } from 'react';
-import { type AuthData, setAuthData, getAuthData } from '../api/client';
+import { setAuthData, api } from '../api/client';
+import { useQuery } from '@tanstack/react-query';
 
 interface AuthContextValue {
-  rawAuthData?: AuthData;
-  isReady: boolean;
-  client?: Record<string, unknown>;
+  isDetecting: boolean; 
+  isLoading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  user?: Record<string, unknown>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -14,25 +17,54 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [isReady, setIsReady] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(true);
+  const [user, setUser] = useState<Record<string, unknown> | undefined>();
 
   useEffect(() => {
-    if (window.Telegram?.WebApp) {
-      const tgWebApp = window.Telegram.WebApp;
-      setAuthData({
-        type: 'Telegram',
-        signature: tgWebApp.initData ?? ''
-      });
-      tgWebApp.ready();
-      tgWebApp.expand();
-    }
+    if (isDetecting) {
+      const emulation = import.meta.env.VITE_TG_EMULATION_INIT_DATA;
 
-    setIsReady(true);
+      if (emulation) {
+        // Режим эмуляции для локальной разработки
+        setAuthData({
+          type: 'Telegram',
+          signature: emulation
+        });
+      }
+
+      else if (window.Telegram?.WebApp) {
+        const tgWebApp = window.Telegram.WebApp;
+        setAuthData({
+          type: 'Telegram',
+          signature: tgWebApp.initData ?? ''
+        });
+        tgWebApp.ready();
+        tgWebApp.expand();
+      }
+
+      setIsDetecting(false);
+    }
   }, []);
 
+  const { data, isLoading, isSuccess, isError } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => api.get<{ user: Record<string, unknown> }>('/api/me'),
+    enabled: !isDetecting,
+    retry: false,
+  });
+
+  useEffect(() => {
+      if (isSuccess && data) {
+        setUser(data.user);
+      }
+  }, [data, isSuccess]);
+
   const value: AuthContextValue = {
-    rawAuthData: getAuthData(),
-    isReady,
+    isDetecting, 
+    isLoading,
+    isSuccess,
+    isError,
+    user
   };
 
   return (

@@ -21,6 +21,25 @@ model Resource {
   booking  Booking?
 }
 
+enum AuthProvider {
+  Telegram
+  Keycloak
+}
+
+model User {
+  id          String     @id @default(uuid())
+  type        AuthProvider
+  telegramId  Int?          @unique
+  keycloakId  String?       @unique
+  
+  firstName   String?   
+  lastName    String?   
+  username    String?
+  photoUrl    String?   
+
+  bookings    Booking[]
+}
+
 model Booking {
   id         String       @id @default(uuid())
 
@@ -29,5 +48,6 @@ model Booking {
   resource   Resource     @relation(fields: [resourceId], references: [id])
 
   // владелец брони
-  user       String
+  userId     String          
+  user       User         @relation(fields: [userId], references: [id])
 }
