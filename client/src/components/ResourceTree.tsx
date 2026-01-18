@@ -74,87 +74,96 @@ function ResourceItem({
   const isUnbooking = isUnbookingInProgress && isThisResourceProcessing;
   const isProcessing = isBooking || isUnbooking;
 
-  const content = (
+  // Контент для родительских узлов (не листовые)
+  const parentContent = (
+    <div className="flex items-center gap-2 py-2 px-3 rounded-lg transition-colors">
+      <CollapsibleTrigger asChild>
+        <Button variant="ghost" size="icon-sm" className="size-6 p-0">
+          {isOpen ? (
+            <ChevronDown className="size-4" />
+          ) : (
+            <ChevronRight className="size-4" />
+          )}
+        </Button>
+      </CollapsibleTrigger>
+      <span className="flex-1 font-medium text-sm">{resource.title}</span>
+    </div>
+  );
+
+  // Контент для листовых узлов (комнаты) - адаптивная компоновка с flex-wrap
+  const leafContent = (
     <div
       className={`
-        flex items-center gap-2 py-2 px-3 rounded-lg transition-colors
-        ${isLeaf ? 'border' : ''}
-        ${isLeaf && isBooked ? 'bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-900' : ''}
-        ${isLeaf && !isBooked ? 'bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-900' : ''}
+        flex flex-wrap items-center gap-x-6 gap-y-2 py-2 px-3 rounded-lg transition-colors border
+        ${isBooked ? 'bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-900' : ''}
+        ${!isBooked ? 'bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-900' : ''}
       `}
     >
-      {hasChildren && (
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="icon-sm" className="size-6 p-0">
-            {isOpen ? (
-              <ChevronDown className="size-4" />
-            ) : (
-              <ChevronRight className="size-4" />
-            )}
-          </Button>
-        </CollapsibleTrigger>
-      )}
+      {/* Название ресурса */}
+      <div className="font-medium text-sm">{resource.title}</div>
       
-      <span className="flex-1 font-medium text-sm">{resource.title}</span>
-      
-      {isLeaf && (
-        <div className="flex items-center gap-2">
-          {isBooked ? (
-            <>
-              <Avatar className="size-6">
-                <AvatarImage src={resource.booking?.user.photoUrl ?? undefined} />
-                <AvatarFallback className="text-xs">
-                  {getUserInitials(
-                    resource.booking?.user.firstName ?? null,
-                    resource.booking?.user.lastName ?? null,
-                    resource.booking?.user.username ?? null
-                  )}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-xs text-muted-foreground max-w-[80px] truncate">
-                {getUserDisplayName(
+      {isBooked ? (
+        <>
+          {/* Аватар и имя - переносятся как группа */}
+          <div className="flex items-center gap-2">
+            <Avatar className="size-6 shrink-0">
+              <AvatarImage src={resource.booking?.user.photoUrl ?? undefined} />
+              <AvatarFallback className="text-xs">
+                {getUserInitials(
                   resource.booking?.user.firstName ?? null,
                   resource.booking?.user.lastName ?? null,
                   resource.booking?.user.username ?? null
                 )}
-              </span>
-              <Badge variant="secondary" className="text-xs">
-                Занято
-              </Badge>
-              {isOwnBooking && (
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  className="h-7 text-xs"
-                  onClick={() => onUnbook(resource.id)}
-                  disabled={isProcessing}
-                >
-                  {isUnbooking ? <Spinner className="size-3" /> : <X className="size-3" />}
-                  Освободить
-                </Button>
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-xs text-muted-foreground">
+              {getUserDisplayName(
+                resource.booking?.user.firstName ?? null,
+                resource.booking?.user.lastName ?? null,
+                resource.booking?.user.username ?? null
               )}
-            </>
-          ) : (
-            <>
-              <Badge variant="outline" className="text-xs text-green-600 border-green-300">
-                Свободно
-              </Badge>
+            </span>
+          </div>
+          {/* Статус и кнопка - переносятся как группа */}
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="text-xs">
+              Занято
+            </Badge>
+            {isOwnBooking && (
               <Button
-                variant="default"
+                variant="destructive"
                 size="sm"
                 className="h-7 text-xs"
-                onClick={() => onBook(resource.id)}
+                onClick={() => onUnbook(resource.id)}
                 disabled={isProcessing}
               >
-                {isBooking ? <Spinner className="size-3" /> : <Check className="size-3" />}
-                Забронировать
+                {isUnbooking ? <Spinner className="size-3" /> : <X className="size-3" />}
+                Освободить
               </Button>
-            </>
-          )}
-        </div>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <Badge variant="outline" className="text-xs text-green-600 border-green-300">
+            Свободно
+          </Badge>
+          <Button
+            variant="default"
+            size="sm"
+            className="h-7 text-xs"
+            onClick={() => onBook(resource.id)}
+            disabled={isProcessing}
+          >
+            {isBooking ? <Spinner className="size-3" /> : <Check className="size-3" />}
+            Забронировать
+          </Button>
+        </>
       )}
     </div>
   );
+
+  const content = isLeaf ? leafContent : parentContent;
 
   if (!hasChildren) {
     return <div className="ml-1">{content}</div>;
