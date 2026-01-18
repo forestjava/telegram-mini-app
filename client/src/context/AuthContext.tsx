@@ -1,7 +1,5 @@
-import type { ReactNode } from 'react';
-import { createContext, useContext, useEffect, useState } from 'react';
-import type { AuthData } from '../api/client';
-import { setAuthData, getAuthData } from '../api/client';
+import { type ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { type AuthData, setAuthData, getAuthData } from '../api/client';
 
 interface AuthContextValue {
   rawAuthData?: AuthData;
@@ -19,15 +17,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // if (window.Telegram?.WebApp) {
-    //   const tgWebApp = window.Telegram.WebApp;
-    //   setAuthData({
-    //     type: 'Telegram',
-    //     signature: tgWebApp.initData ?? ''
-    //   });
-    //   tgWebApp.ready();
-    //   tgWebApp.expand();
-    // }
+    if (window.Telegram?.WebApp) {
+      const tgWebApp = window.Telegram.WebApp;
+      setAuthData({
+        type: 'Telegram',
+        signature: tgWebApp.initData ?? ''
+      });
+      tgWebApp.ready();
+      tgWebApp.expand();
+    }
 
     setIsReady(true);
   }, []);
