@@ -1,13 +1,14 @@
 import { type ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { setAuthData, api } from '../api/client';
 import { useQuery } from '@tanstack/react-query';
+import type { BookingUser } from '@/types/booking';
 
 interface AuthContextValue {
   isDetecting: boolean; 
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
-  user?: Record<string, unknown>;
+  user?: BookingUser;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -18,7 +19,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [isDetecting, setIsDetecting] = useState(true);
-  const [user, setUser] = useState<Record<string, unknown> | undefined>();
+  const [user, setUser] = useState<BookingUser | undefined>();
 
   useEffect(() => {
     if (isDetecting) {
@@ -48,15 +49,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const { data, isLoading, isSuccess, isError } = useQuery({
     queryKey: ['me'],
-    queryFn: () => api.get<{ user: Record<string, unknown> }>('/api/me'),
+    queryFn: () => api.get<BookingUser>('/api/me'),
     enabled: !isDetecting,
     retry: false,
   });
 
   useEffect(() => {
-      if (isSuccess && data) {
-        setUser(data.user);
-      }
+    if (isSuccess && data) {
+      setUser(data);
+    }
   }, [data, isSuccess]);
 
   const value: AuthContextValue = {

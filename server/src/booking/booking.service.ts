@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { toUserResponse } from '../auth/dto/user-response.dto';
 
 @Injectable()
 export class BookingService {
@@ -107,13 +108,7 @@ export class BookingService {
         // Добавляем booking только если он существует
         if (booking) {
           result.booking = {
-            user: {
-              id: booking.user.id,
-              first_name: booking.user.firstName,
-              last_name: booking.user.lastName,
-              username: booking.user.username,
-              photo_url: booking.user.photoUrl,
-            },
+            user: toUserResponse(booking.user),
           };
         }
 
