@@ -18,7 +18,7 @@ export function toUserResponse(user: User): UserResponseDto {
   return {
     id: user.id,
     type: user.type,
-    telegramId: user.telegramId?.toString() ?? null,
+    telegramId: user.telegramId,
     keycloakId: user.keycloakId,
     firstName: user.firstName,
     lastName: user.lastName,
