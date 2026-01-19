@@ -5,7 +5,7 @@
 export interface BookingUser {
   id: number;
   type: "Telegram" | "Keycloak";
-  telegramId?: bigint;
+  telegramId?: string;  // BigInt приходит как string из API
   keycloakId?: string;
   firstName?: string;
   lastName?: string;

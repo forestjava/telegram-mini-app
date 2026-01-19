@@ -3,7 +3,7 @@ import type { AuthProvider, User } from '@prisma/client';
 export class UserResponseDto {
   id: number;
   type: AuthProvider;
-  telegramId?: bigint | null;
+  telegramId: string | null;  // BigInt сериализуется в string для JSON
   keycloakId: string | null;
   firstName: string | null;
   lastName: string | null;
@@ -18,7 +18,7 @@ export function toUserResponse(user: User): UserResponseDto {
   return {
     id: user.id,
     type: user.type,
-    telegramId: user.telegramId,
+    telegramId: user.telegramId?.toString() ?? null,
     keycloakId: user.keycloakId,
     firstName: user.firstName,
     lastName: user.lastName,
