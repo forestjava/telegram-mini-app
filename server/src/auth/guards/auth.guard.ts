@@ -100,10 +100,10 @@ export class AuthGuard implements CanActivate {
     });
 
     return this.prisma.user.upsert({
-      where: { telegramId: telegramUser.id },
+      where: { telegramId: BigInt(telegramUser.id) },
       create: {
         type: AuthProvider.Telegram,
-        telegramId: telegramUser.id,
+        telegramId: BigInt(telegramUser.id),
         firstName: telegramUser.first_name,
         lastName: telegramUser.last_name,
         username: telegramUser.username,

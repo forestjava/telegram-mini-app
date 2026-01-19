@@ -5,7 +5,7 @@
 export interface BookingUser {
   id: number;
   type: "Telegram" | "Keycloak";
-  telegramId?: number;
+  telegramId?: bigint;
   keycloakId?: string;
   firstName?: string;
   lastName?: string;
@@ -40,14 +40,5 @@ export interface BookingResponse {
     parentId: number | null;
     metadata: Record<string, unknown> | null;
   };
-  user: {
-    id: number;
-    type: "Telegram" | "Keycloak";
-    telegramId: number | null;
-    keycloakId: string | null;
-    firstName: string | null;
-    lastName: string | null;
-    username: string | null;
-    photoUrl: string | null;
-  };
+  user: BookingUser;
 }

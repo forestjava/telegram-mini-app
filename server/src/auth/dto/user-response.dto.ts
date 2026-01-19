@@ -3,7 +3,7 @@ import type { AuthProvider, User } from '@prisma/client';
 export class UserResponseDto {
   id: number;
   type: AuthProvider;
-  telegramId: number | null;
+  telegramId?: bigint | null;
   keycloakId: string | null;
   firstName: string | null;
   lastName: string | null;
