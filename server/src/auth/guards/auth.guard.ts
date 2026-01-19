@@ -92,6 +92,13 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('User data not found in auth payload');
     }
 
+    console.log('[AuthGuard] Telegram user data:', {
+      id: telegramUser.id,
+      first_name: telegramUser.first_name,
+      username: telegramUser.username,
+      photo_url: telegramUser.photo_url,
+    });
+
     return this.prisma.user.upsert({
       where: { telegramId: telegramUser.id },
       create: {

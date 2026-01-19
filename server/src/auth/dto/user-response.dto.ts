@@ -1,4 +1,4 @@
-import { AuthProvider, type User } from '@prisma/client';
+import type { AuthProvider, User } from '@prisma/client';
 
 export class UserResponseDto {
   id: number;

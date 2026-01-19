@@ -1,4 +1,6 @@
+import type { AuthProvider } from '@prisma/client';
+
 export type AuthData = {
-  type: 'Telegram' | 'Keycloak';
+  type: AuthProvider;
   signature: string;
 };

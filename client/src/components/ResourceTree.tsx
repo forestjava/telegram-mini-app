@@ -14,7 +14,7 @@ import { ChevronDown, ChevronRight, Check, X, AlertCircle } from 'lucide-react';
 /**
  * Get user initials for avatar fallback
  */
-function getUserInitials(firstName: string | null, lastName: string | null, username: string | null): string {
+function getUserInitials(firstName?: string, lastName?: string, username?: string): string {
   if (firstName && lastName) {
     return `${firstName[0]}${lastName[0]}`.toUpperCase();
   }
@@ -30,7 +30,7 @@ function getUserInitials(firstName: string | null, lastName: string | null, user
 /**
  * Get display name for user
  */
-function getUserDisplayName(firstName: string | null, lastName: string | null, username: string | null): string {
+function getUserDisplayName(firstName?: string, lastName?: string, username?: string): string {
   if (firstName && lastName) {
     return `${firstName} ${lastName}`;
   }
@@ -63,7 +63,7 @@ function ResourceItem({
   isUnbookingInProgress,
 }: ResourceItemProps) {
   const [isOpen, setIsOpen] = useState(true);
-  const hasChildren = resource.children.length > 0;
+  const hasChildren = resource.children && resource.children.length > 0;
   const isBooked = !!resource.booking;
   const { user: currentUser } = useAuth();
   const isOwnBooking = isBooked && resource.booking?.user.id === currentUser?.id;
@@ -107,20 +107,20 @@ function ResourceItem({
           {/* Аватар и имя - переносятся как группа */}
           <div className="flex items-center gap-2">
             <Avatar className="size-6 shrink-0">
-              <AvatarImage src={resource.booking?.user.photoUrl ?? undefined} />
+              <AvatarImage src={resource.booking?.user.photoUrl} />
               <AvatarFallback className="text-xs">
                 {getUserInitials(
-                  resource.booking?.user.firstName ?? null,
-                  resource.booking?.user.lastName ?? null,
-                  resource.booking?.user.username ?? null
+                  resource.booking?.user.firstName,
+                  resource.booking?.user.lastName,
+                  resource.booking?.user.username
                 )}
               </AvatarFallback>
             </Avatar>
             <span className="text-xs text-muted-foreground">
               {getUserDisplayName(
-                resource.booking?.user.firstName ?? null,
-                resource.booking?.user.lastName ?? null,
-                resource.booking?.user.username ?? null
+                resource.booking?.user.firstName,
+                resource.booking?.user.lastName,
+                resource.booking?.user.username
               )}
             </span>
           </div>
@@ -174,7 +174,7 @@ function ResourceItem({
       {content}
       <CollapsibleContent>
         <div className="ml-4 mt-1 space-y-1 border-l-2 border-muted pl-2">
-          {resource.children.map((child) => (
+          {resource.children?.map((child) => (
             <ResourceItem
               key={child.id}
               resource={child}
